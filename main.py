@@ -40,6 +40,13 @@ class PolarConic(Scene):
                 fill_opacity=0.8
             ).scale(1.2).move_to(hyperbola.get_end())
         )
+        directrix = always_redraw(
+            lambda : ParametricFunction(
+                lambda t : plane.polar_to_point(-dtx_tracker.get_value()/np.cos(t),t), 
+                t_range = [0,e.get_value()], 
+                color=GREEN
+            )
+        )
 
         axes = Axes(
             x_range=[0, 8, 1],
@@ -57,7 +64,7 @@ class PolarConic(Scene):
                 color = GREEN,
                 use_smoothing=False, 
                 discontinuities = [np.arccos(1/ecc_tracker.get_value()),2*PI-np.arccos(1/ecc_tracker.get_value())],  
-                dt = 0.1
+                dt = 0.1,  
             )
         )
         gdot = always_redraw(
@@ -83,7 +90,7 @@ class PolarConic(Scene):
             )
         )
         
-        self.add(hyperbola,graph,hdot,gdot)
+        self.add(hyperbola,graph,hdot,gdot,directrix)
 
         self.play(
             e.animate.set_value(2*PI),
