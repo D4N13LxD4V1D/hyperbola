@@ -1,4 +1,5 @@
 from manim import *
+
 class PolarConic(Scene):
     def construct(self):
         e = ValueTracker(0.01)
@@ -58,7 +59,7 @@ class PolarConic(Scene):
                 lag_ratio=0.5
             )
         )
-
+        
         self.add(hyperbola,graph,hdot,gdot)
         self.play(
             e.animate.set_value(2*PI), run_time=2, rate_func=linear
