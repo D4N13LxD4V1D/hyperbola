@@ -1,7 +1,10 @@
 {
     "image": "manimcommunity/manim",
     "features": {
-        "github-cli": "latest"
-    }
-    
+        "github-cli": "latest",
+    },
+    "extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+	],
 }
