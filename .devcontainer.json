@@ -1,4 +1,7 @@
 {
     "image": "manimcommunity/manim",
-    "remoteUser": "root",
+    "features": {
+        "github-cli": "latest"
+    }
+    
 }

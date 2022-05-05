@@ -1,5 +1,4 @@
 from manim import *
-
 class PolarConic(Scene):
     def construct(self):
         e = ValueTracker(0.01)
@@ -14,7 +13,7 @@ class PolarConic(Scene):
                 lambda t : plane.polar_to_point(dtx.get_value()*ecc.get_value()/(1-ecc.get_value()*np.cos(t)), t), 
                 t_range = [0, e.get_value()], 
                 color=GREEN, 
-                use_smoothing=True, 
+                use_smoothing=False, 
                 discontinuities = [PI/3, 5*PI/3], 
                 dt = 0.1
             )
