@@ -1,9 +1,7 @@
-from multiprocessing.sharedctypes import Value
 from manim import *
 
 class PolarConic(Scene):
     def construct(self):
-
         eq1 = MathTex("e=r:D")
         eq2 = MathTex("e=\\frac{r}{D}")
         eq3 = MathTex("eD=r")
@@ -41,7 +39,10 @@ class PolarConic(Scene):
         )
 
         d_center = always_redraw(lambda : Dot(directrix.get_center(), radius=0.01,color=RED))
-        #d_dist = always_redraw(lambda : BraceBetweenPoints(plane.get_origin(), [d.get_value(),0,0],color=RED) if d.get_value() >= 0 else BraceBetweenPoints([d.get_value(),0,0],plane.get_origin(),color=RED))
+        #d_dist = always_redraw(
+        # lambda : BraceBetweenPoints(plane.get_origin(), [d.get_value(),0,0],color=RED) 
+        # if d.get_value() >= 0 
+        # else BraceBetweenPoints([d.get_value(),0,0],plane.get_origin(),color=RED))
         d_label = always_redraw(lambda : MathTex(r"D",).set_color(RED).next_to(d_center,LEFT+DOWN,buff=0.1))
         
         pt_var = Variable(PI/3, "\theta")
@@ -201,4 +202,3 @@ class PolarConic(Scene):
         )
 
         self.wait(1)
-        
