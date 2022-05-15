@@ -12,7 +12,7 @@ class PolarConic(Scene):
 
         self.play(TransformMatchingShapes(eq1,eq2))
         self.wait(1)
-
+ 
         self.play(TransformMatchingShapes(eq2, eq3))
         self.wait(1)
 
