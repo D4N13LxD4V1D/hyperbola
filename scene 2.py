@@ -8,16 +8,16 @@ class PolarConic(Scene):
         eq4 = MathTex("r=e","D")
 
         self.play(Write(eq1))
-        self.wait(1)
+        # self.wait(1)
 
         self.play(TransformMatchingShapes(eq1,eq2))
-        self.wait(1)
+        # self.wait(1)
  
         self.play(TransformMatchingShapes(eq2, eq3))
-        self.wait(1)
+        # self.wait(1)
 
         self.play(TransformMatchingShapes(eq3, eq4))
-        self.wait(1)
+        # self.wait(1)
 
         plane = PolarPlane(radius_max=3).add_coordinates().shift(LEFT*2)
         
@@ -74,12 +74,12 @@ class PolarConic(Scene):
         dp_brace = always_redraw(lambda : BraceBetweenPoints(dp_line.get_end(), dp_line.get_start()))
         dp_label = always_redraw(lambda : MathTex("D").next_to(dp_brace,UP))
 
-        self.play(d.animate.set_value(0), d.animate.set_value(1))
-        self.play(d.animate.set_value(-0.01), d.animate.set_value(-1))
-        self.wait(1)
+        # self.play(d.animate.set_value(0), d.animate.set_value(1))
+        # self.play(d.animate.set_value(-0.01), d.animate.set_value(-1))
+        # self.wait(1)
 
-        self.play(Flash(focus))
-        self.wait(1)
+        # self.play(Flash(focus))
+        # self.wait(1)
 
         dp_brace_1 = BraceBetweenPoints(
             plane.get_center()+[0,r(pt.get_value())*np.sin(pt.get_value()),0],
@@ -99,11 +99,11 @@ class PolarConic(Scene):
         )
         dp_label_low = always_redraw(lambda : MathTex("d").next_to(dp_brace_low,DOWN))
 
-        self.play(
-            Create(dp_brace_low),
-            Create(dp_label_low),
-        )
-        self.wait()
+        # self.play(
+        #     Create(dp_brace_low),
+        #     Create(dp_label_low),
+        # )
+        # self.wait()
 
         self.play(
             FadeOut(dp_brace_low),
@@ -160,21 +160,32 @@ class PolarConic(Scene):
         eq11 = MathTex("r=\\frac{1}{1-\\cos\\theta}").align_to(eq10,LEFT)
 
         self.play(TransformMatchingShapes(eq6,eq7))
-        self.wait(1)
+        # self.wait(1)
 
         self.play(TransformMatchingShapes(eq7, eq8))
-        self.wait(1)
+        # self.wait(1)
 
         self.play(TransformMatchingShapes(eq8, eq9))
-        self.wait(1)
+        # self.wait(1)
 
         self.play(TransformMatchingShapes(eq9, eq10))
-        self.wait(1)
-
+        # self.wait(1)
+        
         # self.play(TransformMatchingShapes(eq10, eq11))
         # self.wait(1)
 
+        d2t = ValueTracker(-1)
+        d2 = always_redraw(
+            lambda : plane.plot_line_graph(
+                [d2t.get_value(), d2t.get_value()],
+                [np.sqrt(9.0-d2t.get_value()**2), -np.sqrt(9.0-d2t.get_value()**2)],
+                line_color=RED,
+                add_vertex_dots=False
+            )
+        )
+
         self.play(
+            Create(d2),
             FadeOut(p_label),
             FadeOut(f_label),
             FadeOut(d_label),
@@ -214,9 +225,74 @@ class PolarConic(Scene):
         )
 
         self.play(
+            FadeOut(directrix),
             plot1_t.animate.set_value(2*PI-np.arccos(1/e.get_value()+d.get_value()/3)),
             # plot2_t.animate.set_value(np.arccos(1/e.get_value()-d.get_value()/3)),
             pt.animate.set_value(2*PI-np.arccos(1/e.get_value()+d.get_value()/3))
         )
 
         self.wait(1)
+
+        self.play(
+            FadeOut(p)
+        )
+        self.wait()
+
+        eq12 = MathTex("r=\\frac{ed}{1+e\\cos\\theta}").align_to(eq10,LEFT)
+        def r(t):
+            return e.get_value()*np.abs(d.get_value())/(1+e.get_value()*np.cos(t))
+        plot3 = always_redraw(
+            lambda : ParametricFunction(
+                lambda t : plane.polar_to_point(r(t),t),
+                t_range=[-np.arccos(-2/3),np.arccos(-2/3)],
+                color = YELLOW
+            )
+        )
+        self.play(
+            TransformMatchingShapes(eq10, eq12),
+            ReplacementTransform(plot1,plot3, path_arc=PI),
+            d2t.animate.set_value(1)
+        )
+        self.wait()
+
+        eq13 = MathTex("r=\\frac{ed}{1+e\\sin\\theta}").align_to(eq12,LEFT)
+        def r(t):
+            return e.get_value()*np.abs(d.get_value())/(1+e.get_value()*np.sin(t))
+        plot4 = always_redraw(
+            lambda : ParametricFunction(
+                lambda t : plane.polar_to_point(r(t),t),
+                t_range=[np.arcsin(-2/3),PI-np.arcsin(-2/3)],
+                color = YELLOW
+            )
+        )
+        d3t = ValueTracker(1)
+        d3 = always_redraw(
+            lambda : ParametricFunction(
+                lambda t : plane.polar_to_point(d3t.get_value()/np.sin(t),t),
+                t_range=[np.arcsin(np.abs(d3t.get_value())/3),PI-np.arcsin(np.abs(d3t.get_value())/3)],
+                color = RED
+            )
+        )
+        self.play(
+            TransformMatchingShapes(eq12, eq13),
+            ReplacementTransform(plot3,plot4, path_arc=PI),
+            ReplacementTransform(d2,d3, path_arc=PI),
+        )
+        self.wait()
+
+        eq14 = MathTex("r=\\frac{ed}{1-e\\sin\\theta}").align_to(eq13,LEFT)
+        def r(t):
+            return e.get_value()*np.abs(d.get_value())/(1-e.get_value()*np.sin(t))
+        plot5 = always_redraw(
+            lambda : ParametricFunction(
+                lambda t : plane.polar_to_point(r(t),t),
+                t_range=[-PI-np.arcsin(2/3),np.arcsin(2/3)],
+                color = YELLOW
+            )
+        )
+        self.play(
+            TransformMatchingShapes(eq13,eq14),
+            ReplacementTransform(plot4,plot5, path_arc=PI),
+            d3t.animate.set_value(-1)
+        )
+        self.wait()

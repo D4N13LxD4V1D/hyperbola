@@ -41,10 +41,12 @@ class Part6(Scene):
             )
         )
 
+
+        ct = ValueTracker(.2)
         curve = always_redraw(
             lambda : ParametricFunction(
                 lambda t : plane.polar_to_point(6/(1-2*np.cos(t)), t), 
-                t_range = [0, 2*PI], 
+                t_range = [.2, ct.get_value()], 
                 color=GREEN, 
                 use_smoothing=False, 
                 discontinuities = [np.arccos(1/2),2*PI-np.arccos(1/2)], 
@@ -73,12 +75,13 @@ class Part6(Scene):
             Create(f1n),
             Create(f2n),
         )
+        self.wait()
 
         self.play(
-            Create(curve),
             Create(p1),
             Create(p1n)
         )
+        self.wait()
 
         self.play(
             Create(l1),
@@ -126,6 +129,27 @@ class Part6(Scene):
         )
         self.wait()
 
+        self.play(
+            FadeOut(
+                l1b, l2b,
+            ),
+            Create(curve),
+        )
+        self.wait()
+
+        self.play(
+            ct.animate.set_value(2*PI+.2),
+            pt.animate.set_value(2*PI+.2),
+            run_time=2
+        )
+        self.wait()
+
+        self.play(
+            FadeOut(
+                f1, f2, f1n, f2n, p1, p1n, l1, l2, curve
+            ),
+        )
+
         stdtitle = Text("Standard Form of Hyperbola",).shift(UP*2.5)
 
         stdform = MathTex(
@@ -134,11 +158,8 @@ class Part6(Scene):
         )
 
         self.play(
-            FadeOut(
-                f1, f2, f1n, f2n, p1, p1n, l1, l2, l1b, l2b, curve
-            ),
             Write(stdtitle),
-            TransformMatchingShapes(diff, stdform)
+            TransformMatchingShapes(diff, stdform),
         )
         self.wait()
 
